@@ -1,0 +1,24 @@
+on:
+  workflow_dispatch:
+    inputs:
+      components:
+        description: 'Component to deploy'
+        required: true
+        type: choice
+        options:
+          - Example
+
+      entornos:
+        description: 'Entornos'
+        required: true
+        type: choice
+        options:
+          - DEV
+          - PRO
+          - PRE
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mostrar el componente seleccionado
+        run: echo "Has seleccionado: ${{ github.event.inputs.components }}"

@@ -1,0 +1,9 @@
+on:
+  workflow_dispatch:
+    inputs:
+      components:
+        description: 'Component to deploy'
+        required: true
+        type: choice
+        options:
+          - Example
