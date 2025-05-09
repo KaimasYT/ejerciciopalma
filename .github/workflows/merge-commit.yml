@@ -70,4 +70,5 @@ jobs:
           body: "Este PR actualiza el input 'components' con los ficheros JSON actuales en la raíz."
           head: feature/change-inputs-components
           base: develop
-
+          commit: false
+        
