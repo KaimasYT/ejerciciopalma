@@ -56,13 +56,12 @@ jobs:
         run: |
           git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }} feature/change-inputs-components
         
-        
-        
-
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
+          token: ${{ secrets.GH_PAT }}
           title: "Actualiza opciones de componentes en deploy.yml"
           body: "Este PR actualiza el input 'components' con los ficheros JSON actuales en la raíz."
           head: feature/change-inputs-components
           base: develop
+        
