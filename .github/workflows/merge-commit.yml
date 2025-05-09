@@ -11,6 +11,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      workflows: write # Agregar este permiso para permitir modificar workflows
 
     steps:
       - name: Checkout repo
@@ -56,7 +57,6 @@ jobs:
         run: |
           git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }} feature/change-inputs-components
         
-        
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
         with:
@@ -65,4 +65,4 @@ jobs:
           body: "Este PR actualiza el input 'components' con los ficheros JSON actuales en la raíz."
           head: feature/change-inputs-components
           base: develop
-        
+
