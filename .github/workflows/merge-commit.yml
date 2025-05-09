@@ -1,9 +1,65 @@
+name: Update Deploy Inputs
+
 on:
-  workflow_dispatch:
-    inputs:
-      components:
-        description: 'Component to deploy'
-        required: true
-        type: choice
-        options:
-          - Example
+  push:
+    branches:
+      - develop
+
+jobs:
+  update-deploy-yml:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # necesario para poder crear ramas y PRs
+
+      - name: Set up Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: List JSON files and update deploy.yml
+        run: |
+          # Obtener nombres de ficheros JSON y convertirlos a YAML list
+          COMPONENTES=$(ls *.json | sed 's/^/          - /')
+
+          # Crear copia actualizada del deploy.yml
+          awk '
+            BEGIN {in_component=0}
+            /components:/ {print; in_component=1; next}
+            in_component && /options:/ {
+              print "        options:"
+              system("ls *.json | sed \"s/^/          - /\"")
+              in_component=0
+              next
+            }
+            !in_component {print}
+          ' .github/workflows/deploy.yml > updated_deploy.yml
+
+          mv updated_deploy.yml .github/workflows/deploy.yml
+
+      - name: Create new branch
+        run: |
+          git checkout -b feature/change-inputs-components
+
+      - name: Commit changes
+        run: |
+          git add .github/workflows/deploy.yml
+          git commit -m "Actualiza opciones de componentes en deploy.yml"
+
+      - name: Push branch
+        run: |
+          git push origin feature/change-inputs-components
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          title: "Actualiza opciones de componentes en deploy.yml"
+          body: "Este PR actualiza el input 'components' con los ficheros JSON actuales en la raíz."
+          head: feature/change-inputs-components
+          base: develop
