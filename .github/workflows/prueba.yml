@@ -1,0 +1,35 @@
+name: Push a rama
+
+on:
+  workflow_dispatch:
+
+jobs:
+  push-a-rama:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Necesario para crear ramas
+
+      - name: Configurar Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Crear archivo de prueba
+        run: |
+          echo "Prueba de push desde GitHub Actions" > archivo-nuevo.txt
+
+      - name: Crear nueva rama
+        run: git checkout -b prueba-push-rama
+
+      - name: Commit de cambios
+        run: |
+          git add archivo-nuevo.txt
+          git commit -m "Añadido archivo de prueba"
+
+      - name: Push con token personal
+        run: |
+          git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }} HEAD:prueba-push-rama
