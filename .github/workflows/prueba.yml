@@ -32,5 +32,5 @@ jobs:
 
       - name: Push con token personal
         run: |
-          git push https://x-access-token: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@github.com/TU_USUARIO/TU_REPOSITORIO.git HEAD:mi-rama
+          git push https://x-access-token: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@https://github.com/KaimasYT/ejerciciopalma.git HEAD:mi-rama
 
