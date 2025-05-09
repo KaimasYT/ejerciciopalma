@@ -52,9 +52,11 @@ jobs:
           git add .github/workflows/deploy.yml
           git commit -m "Actualiza opciones de componentes en deploy.yml"
 
-      - name: Push branch
+      - name: Push branch using PAT
         run: |
-          git push origin feature/change-inputs-components
+          git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/${{ github.repository }} feature/change-inputs-components
+        
+        
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6
